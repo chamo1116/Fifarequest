@@ -90,7 +90,7 @@ celerybeat-schedule
 # Environments
 .env
 .venv
-fifaenv/
+env/
 venv/
 ENV/
 env.bak/

@@ -1,4 +1,5 @@
 from pymodm import EmbeddedMongoModel, MongoModel, fields
+from PIL import Image
 
 #Create Database Model
 class Players(EmbeddedMongoModel):
