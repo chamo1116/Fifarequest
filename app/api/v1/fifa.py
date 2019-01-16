@@ -1,6 +1,9 @@
 from app.api.v1 import api
+from app.api.v1.models import Team 
 
 
-@api.route('/',  methods=['GET'])
-def hola_mundo():
+#Routes
+@api.route('/create_team',  methods=['POST'])
+def create_team():
+
     return 'hola mundo'

@@ -19,8 +19,10 @@ app.config.from_object(Config)
 app = create_app(app)
 
 #Connect to database
-mongo = MongoClient(app)
-db = client.fifa_database
+mongo = MongoClient(Config.MONGO_URI)
+db = mongo.fifa_database
+
+
 
 
 
