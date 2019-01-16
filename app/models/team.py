@@ -3,7 +3,7 @@ from PIL import Image
 
 #Create Database Model
 class Players(EmbeddedMongoModel):
-    picture = fields.ImageField()
+    picture = fields.CharField()
     name = fields.CharField(required = True)
     last_name = fields.CharField(required = True)
     birth_date = fields.DateTimeField(required = True)
@@ -23,7 +23,7 @@ class Technical_team(EmbeddedMongoModel):
 
 class Team(MongoModel):
     name = fields.CharField(primary_key= True, required = True)
-    flag = fields.ImageField()
-    shield = fields.ImageField()
+    flag = fields.CharField()
+    shield = fields.CharField()
     players = fields.EmbeddedModelListField(Players, required = True)
     technical_team = fields.EmbeddedModelListField(Technical_team, required = True)
