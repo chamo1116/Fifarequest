@@ -1,5 +1,5 @@
 
 
 class Config:
-    MONGO_URI = "mongodb://localhost:27017/myDatabase"
+    MONGO_URI = "mongodb://localhost:27017/fifa_database"
 
