@@ -1,11 +1,9 @@
 from webapp.api.v1 import api
 from flask import request, jsonify
-from webapp.models.team import Team
+from webapp.models.team import Team, Player, Technical_team
 from webapp.exceptions import InternalServerError
 from flask import current_app as app
-from pymodm import connect
-from bson.json_util import loads
-
+from pymodm.connection import connect
 
 
 # Routes
@@ -54,8 +52,24 @@ def create_team():
     """
     try:
         data = request.json
+        name = data["name"]
+        flag = data["flag"]
+        shield = data["shield"]
+        players = data["players"]
+        if len(players)>1:
+            for player in players:
+                players = Player.objects.bulk_create([
+                    Player(player).save()
+                ])
+        else:
+            players=Player(list(players[0].values())).save()
+        technical_team = data["technical_team"]
+        players = dict(data["players"][0])
+        #data["technical_team"] = dict(data["technical_team"])
         connect(app.config["MONGO_URI"], alias='default')
-        new_team = Team.objects.raw(data)
+        technical_team = Technical_team(technical_team).save()
+        Team.objects.create(data)
+        #Team.objects.create(name=name, flag=flag, shield=shield, players=players, technical_team=technical_team)
         response = jsonify(response="Team created successfully")
         return response
     except Exception as e:
