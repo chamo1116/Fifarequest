@@ -1,10 +1,11 @@
-from app.api.v1 import api
+from webapp.api.v1 import api
 from flask import request, jsonify
-from app.models.team import Team
-from app.exceptions import InternalServerError
-from pymodm import errors
-from flask_pymongo import PyMongo
-import app
+from webapp.models.team import Team
+from webapp.exceptions import InternalServerError
+from flask import current_app as app
+from pymodm import connect
+from bson.json_util import loads
+
 
 
 # Routes
@@ -12,14 +13,13 @@ import app
 @api.route('/search_team/<string:name_team>',  methods=['GET'])
 def search_team(name_team):
     try:
-        team = Team.objects.get({'name': name_team})
-        response = jsonify(team)
-        response.status_code = 201
-        return response
-    except errors.DoesNotExist as e:
-        print(e)
-        raise InternalServerError(e)
-
+    	connect(app.config["MONGO_URI"], alias='default')
+    	team = Team.objects.get({"name": name_team})
+    	response = jsonify(response=team)
+    	return response
+    except Exception as e:
+    	print(e)
+    	raise InternalServerError(e)
 
 # Create team
 @api.route('/create_team',  methods=['POST'])
@@ -54,15 +54,9 @@ def create_team():
     """
     try:
         data = request.json
-        name = data["name"]
-        flag = data["flag"]
-        shield = data["shield"]
-        players = data["players"]
-        technical_team = data["technical_team"]
-        mongo = PyMongo(app, )
-        new_team = mongo.db.Team.objects.create(name=name, flag=flag, shield=shield, players=players,
-                                                technical_team=technical_team)
-        response = jsonify(new_team)
+        connect(app.config["MONGO_URI"], alias='default')
+        new_team = Team.objects.raw(data)
+        response = jsonify(response="Team created successfully")
         return response
     except Exception as e:
         raise InternalServerError(e)

@@ -7,8 +7,8 @@ _author_ = "Chamito"
 _credits_ = ["Chamito"]
 
 from flask import jsonify
-from app.api.v1 import api
-from app.exceptions import (
+from webapp.api.v1 import api
+from webapp.exceptions import (
     ValidationError,
     InternalServerError,
     BadRequest,
