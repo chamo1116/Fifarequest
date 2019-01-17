@@ -13,13 +13,13 @@ from bson.json_util import loads
 @api.route('/search_team/<string:name_team>',  methods=['GET'])
 def search_team(name_team):
     try:
-    	connect(app.config["MONGO_URI"], alias='default')
-    	team = Team.objects.get({"name": name_team})
-    	response = jsonify(response=team)
-    	return response
+        connect(app.config["MONGO_URI"], alias='default')
+        team = Team.objects.get({"name": name_team})
+        response = jsonify(response=team)
+        return response
     except Exception as e:
-    	print(e)
-    	raise InternalServerError(e)
+        print(e)
+        raise InternalServerError(e)
 
 # Create team
 @api.route('/create_team',  methods=['POST'])
