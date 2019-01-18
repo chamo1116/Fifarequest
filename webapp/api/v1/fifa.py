@@ -211,4 +211,17 @@ def no_headline_players():
 
 
 
-
+#Summary of no headline players per team
+@api.route('/summary_no_headline_players',  methods=['GET'])
+def summary_no_headline_players():
+    try:
+        # Get all teams with no headline players
+        cursor = Team.collection.find({"players.headline": "True"})
+        teams = []
+        for team in cursor:
+            team = Team.export_data(team)
+            teams.append(team)
+        number_no_headline_players = len(teams)
+        return jsonify(number_no_headline_players=number_no_headline_players)
+    except Exception as e:
+        raise InternalServerError(e)

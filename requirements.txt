@@ -3,6 +3,7 @@ chardet==3.0.4
 Click==7.0
 dnspython==1.16.0
 Flask==1.0.2
+Flask-HTTPAuth==3.2.4
 idna==2.8
 ipaddress==1.0.22
 itsdangerous==1.1.0
