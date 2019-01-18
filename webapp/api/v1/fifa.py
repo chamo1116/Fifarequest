@@ -2,6 +2,7 @@ from webapp.api.v1 import api
 from flask import request, jsonify
 from webapp.exceptions import InternalServerError
 from webapp.models.team import Team
+import json
 
 
 # Routes
@@ -9,10 +10,9 @@ from webapp.models.team import Team
 @api.route('/search_team/<string:name_team>',  methods=['GET'])
 def search_team(name_team):
     try:
-        connect(app.config["MONGO_URI"], alias='default')
-        team = Team.objects.get({"name": name_team})
-        response = jsonify(response=team)
-        return response
+        team = Team.collection.find_one({'name': name_team})
+        response = Team.export_data(team)
+        return jsonify(team=response)
     except Exception as e:
         print(e)
         raise InternalServerError(e)
@@ -62,11 +62,21 @@ def create_team():
 #Update team
 @api.route('/update_team',  methods=['PUT'])
 def update_team():
-    data = request.json
-    response = jsonify({'Team created successfull'})
-    response.status_code = 201
-    return response
+    update_team = request.json
+    name = update_team["name"]
+    Team.collection.update_one({'name':name}, {"$set":update_team}, upsert=False)
+    updated_team = Team.collection.find_one({'name': name})
+    response = Team.export_data(updated_team)
+    return jsonify(updated_team=response)
 
+
+#Delete team
+@api.route('/delete_team',  methods=['DELETE'])
+def delete_team():
+    delete_team = request.json
+    name = delete_team["name"]
+    Team.collection.delete_one({'name':name})
+    return jsonify(update_team='Team Deleted')
 
 
 
