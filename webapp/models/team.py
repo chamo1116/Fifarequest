@@ -1,28 +1,41 @@
-from pymodm import MongoModel, fields
+from bson import ObjectId
+from pymongo import MongoClient
+import ssl
+#connect to MongoDB.
+uri = "mongodb://chamo1116:chamito@cluster0-shard-00-00-alr0n.mongodb.net:27017,cluster0-shard-00-01-alr0n.mongodb.net:27017,\
+        cluster0-shard-00-02-alr0n.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+#uri = 'mongodb+srv://chamo1116:'+urllib.parse.quote('Chamo+2201', safe='')+\
+        #'@cluster0-alr0n.mongodb.net/test?retryWrites=true'
+conn = MongoClient(uri)
 
-#Create Database Model
-class Player(MongoModel):
-    picture = fields.CharField()
-    name = fields.CharField(required=True)
-    last_name = fields.CharField(required=True)
-    birth_date = fields.DateTimeField(required=True)
-    position_player = fields.CharField(required=True)
-    number_player = fields.IntegerField()
-    headline = fields.BooleanField(required=True)
+class Model(dict):
+    """
+    A simple model that wraps mongodb document
+    """
+    __getattr__ = dict.get
+    __delattr__ = dict.__delitem__
+    __setattr__ = dict.__setitem__
+
+    def save(self):
+        if not self._id:
+            self.collection.insert(self)
+        else:
+            self.collection.update(
+                { "_id": ObjectId(self._id) }, self)
+
+    def reload(self):
+        if self._id:
+            self.update(self.collection\
+                    .find_one({"_id": ObjectId(self._id)}))
+
+    def remove(self):
+        if self._id:
+            self.collection.remove({"_id": ObjectId(self._id)})
+            self.clear()
 
 
-class Technical_team(MongoModel):
-    name = fields.CharField(required = True)
-    last_name = fields.CharField()
-    birth_date = fields.DateTimeField(required = True)
-    nationality = fields.CharField(required = True)
-    rol = fields.CharField(
-        choices=('coach', 'assistant', 'doctor', 'preparer'), required=True)
-
-
-class Team(MongoModel):
-    name = fields.CharField(primary_key=True, required=True)
-    flag = fields.CharField()
-    shield = fields.CharField()
-    players = fields.ReferenceField(Player, required=True)
-    technical_team = fields.ReferenceField(Technical_team, required=True)
+class Team(Model):
+    collection = conn["test"]["fifa_collections"]
+    @property
+    def keywords(self):
+        return self.title.split()

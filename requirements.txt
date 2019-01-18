@@ -1,10 +1,14 @@
 certifi==2018.11.29
+chardet==3.0.4
 Click==7.0
+dnspython==1.16.0
 Flask==1.0.2
+idna==2.8
 ipaddress==1.0.22
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.0
-pymodm==0.5.0.dev0
+pymongo==3.7.2
+requests==2.21.0
 virtualenv==16.1.0
 Werkzeug==0.14.1
