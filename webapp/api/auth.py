@@ -4,7 +4,7 @@
 Archivo base del proyecto
 """
 _author_ = "Chamito"
-_copyright_ = "Copyright 2018, VPS-Hosting Project"
+_copyright_ = "Copyright 2019"
 _credits_ = ["Chamito"]
 
 from flask import jsonify
