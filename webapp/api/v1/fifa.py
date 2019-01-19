@@ -1,12 +1,16 @@
-from webapp.api.v1 import api
 from flask import request, jsonify
 from webapp.exceptions import InternalServerError
 from webapp.models.team import Team
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                jwt_required, jwt_refresh_token_required, get_jwt_identity)
+from webapp import conn, flask_bcrypt, jwt
 from webapp import app as api
 import json
+
 # Routes
 # Get team by name
 @api.route('/search_team/<string:name_team>',  methods=['GET'])
+@jwt_required
 def search_team(name_team):
     try:
         #Instance team with name team
@@ -19,6 +23,7 @@ def search_team(name_team):
 
 # Create team
 @api.route('/create_team',  methods=['POST'])
+@jwt_required
 def create_team():
     try:
         data = request.json
@@ -35,6 +40,7 @@ def create_team():
 
 #Update team
 @api.route('/update_team',  methods=['PUT'])
+@jwt_required
 def update_team():
     data = request.json
     update_team = Team(data)
@@ -44,6 +50,7 @@ def update_team():
 
 #Delete team
 @api.route('/delete_team',  methods=['DELETE'])
+@jwt_required
 def delete_team():
     try:
         delete_data = request.json
@@ -58,6 +65,7 @@ def delete_team():
 
 #Number of teams
 @api.route('/registred_teams',  methods=['GET'])
+@jwt_required
 def registred_teams():
     try:
         team = Team()
@@ -68,6 +76,7 @@ def registred_teams():
 
 #Number of players
 @api.route('/number_players',  methods=['GET'])
+@jwt_required
 def number_players():
     try:
         team = Team()
@@ -78,6 +87,7 @@ def number_players():
 
 #Youngest player
 @api.route('/youngest_player',  methods=['GET'])
+@jwt_required
 def youngest_player():
     try:
         team = Team()
@@ -88,6 +98,7 @@ def youngest_player():
 
 #Oldest player
 @api.route('/oldest_player',  methods=['GET'])
+@jwt_required
 def oldest_player():
     try:
         team = Team()
@@ -98,6 +109,7 @@ def oldest_player():
 
 #No headline players
 @api.route('/no_headline_players',  methods=['GET'])
+@jwt_required
 def no_headline_players():
     try:
         team = Team()
@@ -110,6 +122,7 @@ def no_headline_players():
 
 #Average of no headline players per team
 @api.route('/average_no_headline_players',  methods=['GET'])
+@jwt_required
 def average_no_headline_players():
     try:
         team = Team()
@@ -120,6 +133,7 @@ def average_no_headline_players():
 
 #Team with more players registred
 @api.route('/more_players_team',  methods=['GET'])
+@jwt_required
 def more_players_team():
     try:
         team = Team()
@@ -131,6 +145,7 @@ def more_players_team():
 
 #Average age players
 @api.route('/average_age_players',  methods=['GET'])
+@jwt_required
 def average_age_players():
     try:
         team = Team()
@@ -141,6 +156,7 @@ def average_age_players():
 
 #Average players per team
 @api.route('/average_players_per_team',  methods=['GET'])
+@jwt_required
 def average_players_per_team():
     try:
         team = Team()
@@ -151,6 +167,7 @@ def average_players_per_team():
 
 #Coach with different nationality
 @api.route('/coach_nationality',  methods=['GET'])
+@jwt_required
 def coach_nationality():
     try:
         team = Team()
@@ -162,6 +179,7 @@ def coach_nationality():
 
 #Oldest coach
 @api.route('/oldest_coach',  methods=['GET'])
+@jwt_required
 def oldest_coach():
     try:
         team = Team()
