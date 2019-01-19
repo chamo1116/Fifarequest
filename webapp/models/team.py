@@ -4,7 +4,7 @@ from webapp.exceptions import InternalServerError
 import flattener
 import itertools
 from datetime import datetime, date
-
+from webapp import app, conn
 """
         Create team JSON
         {
@@ -80,13 +80,6 @@ from datetime import datetime, date
             }
     """
 
-#connect to MongoDB.
-uri = "mongodb://chamo1116:chamito@cluster0-shard-00-00-alr0n.mongodb.net:27017,cluster0-shard-00-01-alr0n.mongodb.net:27017,\
-        cluster0-shard-00-02-alr0n.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
-#uri = 'mongodb+srv://chamo1116:'+urllib.parse.quote('Chamo+2201', safe='')+\
-        #'@cluster0-alr0n.mongodb.net/test?retryWrites=true'
-conn = MongoClient(uri)
-
 class Model(dict):
     """
     A simple model that wraps mongodb document
@@ -126,8 +119,8 @@ class Model(dict):
 
 
 class Team(Model):
-
-    collection = conn["test"]["fifa_collections"]
+    #Get collection from database
+    collection = conn.db.fifa_collections
 
     @staticmethod
     def export_data(data):

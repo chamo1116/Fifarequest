@@ -2,6 +2,7 @@ from webapp.api.v1 import api
 from flask import request, jsonify
 from webapp.exceptions import InternalServerError
 from webapp.models.team import Team
+from webapp import app as api
 import json
 # Routes
 # Get team by name
