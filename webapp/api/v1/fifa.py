@@ -299,7 +299,7 @@ def average_no_headline_players():
 @api.route('/more_players_team',  methods=['GET'])
 def more_players_team():
     try:
-        # Get all teams with no headline players
+        # Get all teams 
         cursor = Team.collection.find({})
         names = []
         num_players = []
@@ -317,7 +317,7 @@ def more_players_team():
 @api.route('/average_age_players',  methods=['GET'])
 def average_age_players():
     try:
-        # Get all teams with no headline players
+        # Get all teams 
         cursor = Team.collection.find({})
         players_total = 0
         for team in cursor:
@@ -344,7 +344,7 @@ def average_age_players():
 @api.route('/average_players_per_team',  methods=['GET'])
 def average_players_per_team():
     try:
-        # Get all teams with no headline players
+        # Get all teams 
         cursor = Team.collection.find({})
         players_total = 0
         total_teams = 0
@@ -363,13 +363,14 @@ def average_players_per_team():
 @api.route('/coach_nationality',  methods=['GET'])
 def coach_nationality():
     try:
-        # Get all teams with no headline players
+        # Get fields: team name, coach name, coach last_name and coach nationality 
         cursor = Team.collection.find({"technical_team.rol":"Coach"},{ "name": 1, "technical_team.name" : 1, 
             "technical_team.last_name" : 1, "technical_team.nationality" : 1 })
         list_coach = []
         for team in cursor:
             technical_team = team["technical_team"]
             for coach in technical_team:
+                #Validate nationality with the team name
                 if coach["nationality"] == team["name"]:
                     list_coach.append(coach["name"]+" "+coach["last_name"])
         return jsonify(list_coach)
@@ -381,7 +382,7 @@ def coach_nationality():
 @api.route('/oldest_coach',  methods=['GET'])
 def oldest_coach():
     try:
-        # Get all teams with no headline players
+        # Get fields: team name, coach name, coach last_name and birthdate's coach 
         cursor = Team.collection.find({"technical_team.rol":"Coach"},{ "name": 1, "technical_team.name" : 1, 
             "technical_team.last_name" : 1, "technical_team.birth_date" : 1 })
         age_coach = []
@@ -389,12 +390,14 @@ def oldest_coach():
         for team in cursor:
             technical_team = team["technical_team"]
             for coach in technical_team:
+                #Calculate each coach age 
                 birth_date = coach["birth_date"]
                 birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
                 today = date.today()
                 age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
                 age_coach.append(age)
                 name_coach.append(coach["name"]+" "+coach["last_name"])
+        #Calculate max and the index
         index_max_age_coach = age_coach.index(max(age_coach))
         coach_oldest = name_coach[index_max_age_coach]
         return jsonify(coach_oldest=coach_oldest)
