@@ -7,6 +7,8 @@ from flask import Flask
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
+
 #from webapp.api.v1 import api as api_blueprint
 
 class JSONEncoder(json.JSONEncoder):
@@ -23,6 +25,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 app = Flask(__name__)
+CORS(app)
 app.config['MONGO_URI'] = "mongodb://chamo1116:chamito@cluster0-shard-00-00-alr0n.mongodb.net:27017,\
 cluster0-shard-00-01-alr0n.mongodb.net:27017,cluster0-shard-00-02-alr0n.mongodb.net:27017/\
 test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
